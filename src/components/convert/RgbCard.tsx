@@ -1,8 +1,4 @@
-import * as c from "colors-convert";
-
-import getCmykConversions, {
-  getCmykObjFromString,
-} from "@/lib/utils/get-cmyk-conversions";
+import getRgbConversions from "@/lib/utils/get-rgb-conversions";
 
 import {
   Card,
@@ -12,26 +8,23 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-type CmykCardProps = { color: string; showFooter?: boolean };
+type RgbCardProps = { color: string; showFooter?: boolean };
 
-const CmykCard = ({ color, showFooter }: CmykCardProps) => {
+const RgbCard = ({ color, showFooter }: RgbCardProps) => {
   // Handle errors / display fallback state.
   // Sometimes the wrong color slips through...
-  if (!color.startsWith("cmyk(")) {
+  if (!color.startsWith("rgb(")) {
     return (
       <div className="p-2">
-        <em className="text-destructive">{`"${color}" is an invalid CMYK value`}</em>
+        <em className="text-destructive">{`"${color}" is an invalid RGB value`}</em>
         <p className="text-sm text-muted-foreground">
-          Did you mean to use the <code>{`<CmykCard />`}</code> here?
+          Did you mean to use the <code>{`<RgbCard />`}</code> here?
         </p>
       </div>
     );
   }
 
-  const conversions = getCmykConversions(color);
-
-  const validCmykObject = getCmykObjFromString(color);
-  const toRgb = c.cmykToRgb(validCmykObject);
+  const conversions = getRgbConversions(color);
 
   if (!conversions) {
     return (
@@ -44,15 +37,46 @@ const CmykCard = ({ color, showFooter }: CmykCardProps) => {
   return (
     <Card>
       <div
-        style={{ backgroundColor: `rgb(${toRgb.r},${toRgb.g},${toRgb.b})` }}
+        style={{ backgroundColor: conversions.adjustedRgb }}
         className="p-0 min-h-32"
       ></div>
       <CardHeader>
-        <CardTitle>{conversions.adjustedCmyk}</CardTitle>
+        <CardTitle>{conversions.adjustedRgb}</CardTitle>
       </CardHeader>
       <CardContent>
         {conversions && (
           <ul className="space-y-4">
+            <li>
+              <p className="text-muted-foreground text-sm">RGBA</p>
+              {conversions.toRGBA?.a ? (
+                <p>
+                  rgba(
+                  {`${conversions.toRGBA.r}, ${conversions.toRGBA.g}, ${conversions.toRGBA.b}, ${conversions.toRGBA.a}`}
+                  )
+                </p>
+              ) : (
+                <p>
+                  rgba(
+                  {`${conversions.toRGBA.r}, ${conversions.toRGBA.g}, ${conversions.toRGBA.b}`}
+                  )
+                </p>
+              )}
+            </li>
+            <li>
+              <p className="text-muted-foreground text-sm">CMYK</p>
+              <p>
+                cmyk(
+                {`${conversions.toCMYK.c}, ${conversions.toCMYK.m}, 
+                ${conversions.toCMYK.y}, ${conversions.toCMYK.k}`}
+                )
+              </p>
+              <p>
+                cmyk(
+                {`${conversions.toCMYK.c}%, ${conversions.toCMYK.m}%, 
+                ${conversions.toCMYK.y}%, ${conversions.toCMYK.k}%`}
+                )
+              </p>
+            </li>
             <li>
               <p className="text-muted-foreground text-sm">HEX</p>
               <p>{conversions.toHEX}</p>
@@ -87,42 +111,17 @@ const CmykCard = ({ color, showFooter }: CmykCardProps) => {
                 )
               </p>
             </li>
-            <li>
-              <p className="text-muted-foreground text-sm">RGB</p>
-              <p>
-                rgb(
-                {`${conversions.toRGB.r}, ${conversions.toRGB.g}, 
-                ${conversions.toRGB.b}`}
-                )
-              </p>
-            </li>
-            <li>
-              <p className="text-muted-foreground text-sm">RGBA</p>
-              {conversions.toRGBA?.a ? (
-                <p>
-                  rgba(
-                  {`${conversions.toRGBA.r}, ${conversions.toRGBA.g}, ${conversions.toRGBA.b}, ${conversions.toRGBA.a}`}
-                  )
-                </p>
-              ) : (
-                <p>
-                  rgba(
-                  {`${conversions.toRGBA.r}, ${conversions.toRGBA.g}, ${conversions.toRGBA.b}`}
-                  )
-                </p>
-              )}
-            </li>
           </ul>
         )}
       </CardContent>
       {showFooter && (
         <CardFooter className="text-sm text-muted-foreground">
-          Note that CMYK values cannot be accurately represented on digital
-          screens. The true color being displayed is the RGB value.
+          The original input value has been converted to
+          {` "${conversions.adjustedRgb}"`}
         </CardFooter>
       )}
     </Card>
   );
 };
 
-export default CmykCard;
+export default RgbCard;

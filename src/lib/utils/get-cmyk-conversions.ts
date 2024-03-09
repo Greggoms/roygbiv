@@ -1,34 +1,5 @@
 import * as c from "colors-convert";
-
-type CmykConversions =
-  | undefined
-  | {
-      toHEX: string;
-      toRGB: {
-        r: number;
-        g: number;
-        b: number;
-      };
-      toRGBA: {
-        r: number;
-        g: number;
-        b: number;
-        a?: number;
-      };
-      toHSL: {
-        h: number;
-        s: number;
-        l: number;
-      };
-      toHSLA: {
-        h: number;
-        s: number;
-        l: number;
-        a: number;
-      };
-      adjustedCmyk: string;
-      colorToCmyk: string;
-    };
+import { CmykConversions } from "@/types/conversions";
 
 export default function getCmykConversions(cmyk: string): CmykConversions {
   if (!cmyk) return undefined;

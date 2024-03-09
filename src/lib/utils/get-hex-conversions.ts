@@ -1,39 +1,5 @@
 import * as c from "colors-convert";
-
-type HexConversions =
-  | undefined
-  | {
-      toRGB: {
-        r: number;
-        g: number;
-        b: number;
-      };
-      toRGBA: {
-        r: number;
-        g: number;
-        b: number;
-        a?: number;
-      };
-      toCMYK: {
-        c: number;
-        m: number;
-        y: number;
-        k: number;
-      };
-      toHSL: {
-        h: number;
-        s: number;
-        l: number;
-      };
-      toHSLA: {
-        h: number;
-        s: number;
-        l: number;
-        a: number;
-      };
-      adjustedHex: string;
-      colorToHex: string;
-    };
+import { HexConversions } from "@/types/conversions";
 
 export default function getHexConversions(hex: string): HexConversions {
   if (!hex) return undefined;

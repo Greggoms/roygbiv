@@ -4,7 +4,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-import convertLinks from "@/lib/convert-links.json";
+import convertLinks from "@/lib/convert-links";
 
 import { Button } from "@/components/ui/button";
 import {

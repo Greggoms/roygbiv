@@ -1,8 +1,4 @@
-import * as c from "colors-convert";
-
-import getCmykConversions, {
-  getCmykObjFromString,
-} from "@/lib/utils/get-cmyk-conversions";
+import getHslaConversions from "@/lib/utils/get-hsla-conversions";
 
 import {
   Card,
@@ -12,26 +8,23 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-type CmykCardProps = { color: string; showFooter?: boolean };
+type HslaCardProps = { color: string; showFooter?: boolean };
 
-const CmykCard = ({ color, showFooter }: CmykCardProps) => {
+const HslaCard = ({ color, showFooter }: HslaCardProps) => {
   // Handle errors / display fallback state.
   // Sometimes the wrong color slips through...
-  if (!color.startsWith("cmyk(")) {
+  if (!color.startsWith("hsla(")) {
     return (
       <div className="p-2">
-        <em className="text-destructive">{`"${color}" is an invalid CMYK value`}</em>
+        <em className="text-destructive">{`"${color}" is an invalid HSLA value`}</em>
         <p className="text-sm text-muted-foreground">
-          Did you mean to use the <code>{`<CmykCard />`}</code> here?
+          Did you mean to use the <code>{`<HslaCard />`}</code> here?
         </p>
       </div>
     );
   }
 
-  const conversions = getCmykConversions(color);
-
-  const validCmykObject = getCmykObjFromString(color);
-  const toRgb = c.cmykToRgb(validCmykObject);
+  const conversions = getHslaConversions(color);
 
   if (!conversions) {
     return (
@@ -44,19 +37,15 @@ const CmykCard = ({ color, showFooter }: CmykCardProps) => {
   return (
     <Card>
       <div
-        style={{ backgroundColor: `rgb(${toRgb.r},${toRgb.g},${toRgb.b})` }}
+        style={{ backgroundColor: conversions.adjustedHsla }}
         className="p-0 min-h-32"
       ></div>
       <CardHeader>
-        <CardTitle>{conversions.adjustedCmyk}</CardTitle>
+        <CardTitle>{conversions.adjustedHsla}</CardTitle>
       </CardHeader>
       <CardContent>
         {conversions && (
           <ul className="space-y-4">
-            <li>
-              <p className="text-muted-foreground text-sm">HEX</p>
-              <p>{conversions.toHEX}</p>
-            </li>
             <li>
               <p className="text-muted-foreground text-sm">HSL</p>
               <p>
@@ -73,19 +62,23 @@ const CmykCard = ({ color, showFooter }: CmykCardProps) => {
               </p>
             </li>
             <li>
-              <p className="text-muted-foreground text-sm">HSLA</p>
+              <p className="text-muted-foreground text-sm">CMYK</p>
               <p>
-                hsla(
-                {`${conversions.toHSLA.h}, ${conversions.toHSLA.s}, 
-                ${conversions.toHSLA.l}, ${conversions.toHSLA.a}`}
+                cmyk(
+                {`${conversions.toCMYK.c}, ${conversions.toCMYK.m}, 
+                ${conversions.toCMYK.y}, ${conversions.toCMYK.k}`}
                 )
               </p>
               <p>
-                hsla(
-                {`${conversions.toHSLA.h}, ${conversions.toHSLA.s}%, 
-                ${conversions.toHSLA.l}%, ${conversions.toHSLA.a}`}
+                cmyk(
+                {`${conversions.toCMYK.c}%, ${conversions.toCMYK.m}%, 
+                ${conversions.toCMYK.y}%, ${conversions.toCMYK.k}%`}
                 )
               </p>
+            </li>
+            <li>
+              <p className="text-muted-foreground text-sm">HEX</p>
+              <p>{conversions.toHEX}</p>
             </li>
             <li>
               <p className="text-muted-foreground text-sm">RGB</p>
@@ -117,12 +110,12 @@ const CmykCard = ({ color, showFooter }: CmykCardProps) => {
       </CardContent>
       {showFooter && (
         <CardFooter className="text-sm text-muted-foreground">
-          Note that CMYK values cannot be accurately represented on digital
-          screens. The true color being displayed is the RGB value.
+          The original input value has been converted to
+          {` "${conversions.adjustedHsla}"`}
         </CardFooter>
       )}
     </Card>
   );
 };
 
-export default CmykCard;
+export default HslaCard;
