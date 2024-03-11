@@ -6,15 +6,12 @@ import maxContrast from "@/lib/utils/max-contrast";
 
 import { Button } from "@/components/ui/button";
 
-type SubmittedColorBadgeProps = {
+type HexBadgeProps = {
   color: string;
   handleSubmit: () => void;
 };
 
-const SubmittedColorBadge = ({
-  color,
-  handleSubmit,
-}: SubmittedColorBadgeProps) => {
+const HexBadge = ({ color, handleSubmit }: HexBadgeProps) => {
   const removeAColor = useColorStore((state) => state.removeAColor);
 
   const toRgb = c.hexToRgb(color);
@@ -42,4 +39,4 @@ const SubmittedColorBadge = ({
   );
 };
 
-export default SubmittedColorBadge;
+export default HexBadge;

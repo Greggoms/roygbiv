@@ -5,13 +5,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useColorStore } from "@/store";
-import HexBadge from "@/components/convert/HexBadge";
-import HexCard from "../convert/HexCard";
+import HslCard from "../convert/HslCard";
+import HslBadge from "../convert/HslBadge";
 import getColorsByFormat from "@/lib/utils/get-colors-by-format";
-import getHexConversions from "@/lib/utils/get-hex-conversions";
+import getHslConversions from "@/lib/utils/get-hsl-conversions";
 import {
-  ConvertColorValues,
-  convertColorSchema,
+  ConvertHslValues,
+  convertHslSchema,
 } from "./schemas/convert-colors-form";
 
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -30,33 +31,33 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 
-const ConvertHexForm = () => {
+const ConvertHslForm = () => {
   const [submittedColor, setSubmittedColor] = useState("");
   const submittedColors = useColorStore((state) => state.submittedColors);
   const addAColor = useColorStore((state) => state.addAColor);
 
   const removeSomeColors = useColorStore((state) => state.removeSomeColors);
 
-  const colors = getColorsByFormat(submittedColors, "hex");
+  const colors = getColorsByFormat(submittedColors, "hsl");
   const colorMap = colors.split("__").filter((val) => !!val);
 
-  const form = useForm<ConvertColorValues>({
-    resolver: zodResolver(convertColorSchema),
-    defaultValues: { hex: "" },
+  const form = useForm<ConvertHslValues>({
+    resolver: zodResolver(convertHslSchema),
+    defaultValues: { hsl: "" },
   });
 
-  const onSubmit = (values: ConvertColorValues) => {
-    const { hex } = values;
+  const onSubmit = (values: ConvertHslValues) => {
+    const { hsl } = values;
     try {
-      const conversions = getHexConversions(hex);
+      const conversions = getHslConversions(hsl);
 
       if (conversions) {
         // update the value of useLocalStorage
-        addAColor(conversions.adjustedHex);
-        setSubmittedColor(conversions.adjustedHex);
+        addAColor(conversions.adjustedHsl);
+        setSubmittedColor(conversions.adjustedHsl);
       }
     } catch (error: any) {
-      form.setError("hex", { message: error.message, type: "validate" });
+      form.setError("hsl", { message: error.message, type: "validate" });
     }
   };
 
@@ -67,19 +68,22 @@ const ConvertHexForm = () => {
           <div className="flex flex-col gap-y-2">
             <FormField
               control={form.control}
-              name="hex"
+              name="hsl"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel>HEX Value</FormLabel>
+                  <FormLabel>HSL Value</FormLabel>
                   <div className="flex items-center gap-x-2">
                     <FormControl>
                       <Input
-                        placeholder="eg: #0284c7 || 133337 || 007"
+                        placeholder="eg: hsl(250, 50%, 50%) || 250 50 50"
                         {...field}
                       />
                     </FormControl>
                     <Button type="submit">Convert</Button>
                   </div>
+                  <FormDescription>
+                    h: 0-359, s: 0-100, l: 0-100
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -97,7 +101,7 @@ const ConvertHexForm = () => {
                     className="text-xs py-[2px] px-[4px] h-auto"
                     onClick={() => {
                       removeSomeColors(colorMap);
-                      form.setValue("hex", "");
+                      form.setValue("hsl", "");
                     }}
                   >
                     remove all
@@ -111,13 +115,13 @@ const ConvertHexForm = () => {
                       {/* Always visible badges */}
                       {colorMap.slice(0, 8).map((color) => (
                         <li key={color}>
-                          <HexBadge
+                          <HslBadge
                             color={color}
                             handleSubmit={() => {
-                              form.setValue("hex", color, {
+                              form.setValue("hsl", color, {
                                 shouldValidate: true,
                               });
-                              form.setFocus("hex");
+                              form.setFocus("hsl");
                             }}
                           />
                         </li>
@@ -142,13 +146,13 @@ const ConvertHexForm = () => {
                       {/* Always visible badges */}
                       {colorMap.slice(8).map((color) => (
                         <li key={color}>
-                          <HexBadge
+                          <HslBadge
                             color={color}
                             handleSubmit={() => {
-                              form.setValue("hex", color, {
+                              form.setValue("hsl", color, {
                                 shouldValidate: true,
                               });
-                              form.setFocus("hex");
+                              form.setFocus("hsl");
                             }}
                           />
                         </li>
@@ -162,9 +166,9 @@ const ConvertHexForm = () => {
         </form>
       </Form>
 
-      {submittedColor && <HexCard color={submittedColor} showFooter />}
+      {submittedColor && <HslCard color={submittedColor} showFooter />}
     </>
   );
 };
 
-export default ConvertHexForm;
+export default ConvertHslForm;

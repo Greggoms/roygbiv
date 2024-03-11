@@ -13,16 +13,18 @@ const ConvertHEXPage = () => {
       <h1 className="sr-only">Convert a HEX value</h1>
       <ConvertHexForm />
 
-      <div className="mt-10">
-        <h2 className="text-2xl font-semibold mb-3">Recently Converted</h2>
-        <ul className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          {colors.split("__").map((c) => (
-            <li key={c}>
-              <HexCard color={c} />
-            </li>
-          ))}
-        </ul>
-      </div>
+      {colors && (
+        <div className="mt-10">
+          <h2 className="text-2xl font-semibold mb-3">Recently Converted</h2>
+          <ul className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            {colors.split("__").map((c) => (
+              <li key={c}>
+                <HexCard color={c} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       {/* <OtherColorCard /> */}
       {/* <HexExamples /> */}
     </main>

@@ -3,6 +3,7 @@ import getHslaConversions from "@/lib/utils/get-hsla-conversions";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -36,12 +37,22 @@ const HslaCard = ({ color, showFooter }: HslaCardProps) => {
 
   return (
     <Card>
-      <div
-        style={{ backgroundColor: conversions.adjustedHsla }}
-        className="p-0 min-h-32"
-      ></div>
+      <div className="grid h-36 overflow-hidden">
+        <div
+          style={{
+            backgroundColor: conversions.adjustedHsla,
+          }}
+          className="col-start-1 row-start-1 p-0 z-10 rounded-t-md"
+        />
+        <p className="col-start-1 row-start-1 font-semibold text-center">
+          {Array.apply(null, Array(50)).map(() => "transparent ")}
+        </p>
+      </div>
       <CardHeader>
         <CardTitle>{conversions.adjustedHsla}</CardTitle>
+        <CardDescription>
+          {`${conversions.adjustedHsla.replaceAll("%", "")}`}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         {conversions && (

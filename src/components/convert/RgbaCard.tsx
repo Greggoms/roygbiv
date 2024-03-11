@@ -16,7 +16,7 @@ const RgbaCard = ({ color, showFooter }: RgbaCardProps) => {
   if (!color.startsWith("rgba(")) {
     return (
       <div className="p-2">
-        <em className="text-destructive">{`"${color}" is an invalid RGB value`}</em>
+        <em className="text-destructive">{`"${color}" is an invalid RGBA value`}</em>
         <p className="text-sm text-muted-foreground">
           Did you mean to use the <code>{`<RgbaCard />`}</code> here?
         </p>
@@ -36,10 +36,17 @@ const RgbaCard = ({ color, showFooter }: RgbaCardProps) => {
 
   return (
     <Card>
-      <div
-        style={{ backgroundColor: conversions.adjustedRgba }}
-        className="p-0 min-h-32"
-      ></div>
+      <div className="grid h-36 overflow-hidden">
+        <div
+          style={{
+            backgroundColor: conversions.adjustedRgba,
+          }}
+          className="col-start-1 row-start-1 p-0 z-10 rounded-t-md"
+        />
+        <p className="col-start-1 row-start-1 font-semibold text-center">
+          {Array.apply(null, Array(50)).map(() => "transparent ")}
+        </p>
+      </div>
       <CardHeader>
         <CardTitle>{conversions.adjustedRgba}</CardTitle>
       </CardHeader>

@@ -55,7 +55,7 @@ export default function getColorsByFormat(
       case "cmyk":
         value = value
           .split("__")
-          .filter((val) => val.includes("cmyk"))
+          .filter((val) => val.includes("cmyk("))
           .join("__");
         break;
       case "hex":
@@ -67,25 +67,25 @@ export default function getColorsByFormat(
       case "hsl":
         value = value
           .split("__")
-          .filter((val) => val.includes("hsl"))
+          .filter((val) => val.includes("hsl("))
           .join("__");
         break;
       case "hsla":
         value = value
           .split("__")
-          .filter((val) => val.includes("hsla"))
+          .filter((val) => val.includes("hsla("))
           .join("__");
         break;
       case "rgb":
         value = value
           .split("__")
-          .filter((val) => val.includes("rgb"))
+          .filter((val) => val.includes("rgb("))
           .join("__");
         break;
       case "rgba":
         value = value
           .split("__")
-          .filter((val) => val.includes("rgba"))
+          .filter((val) => val.includes("rgba("))
           .join("__");
         break;
 

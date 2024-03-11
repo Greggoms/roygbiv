@@ -6,7 +6,7 @@ const ConvertPage = () => {
     <main className="container mt-5 mb-10">
       <h1>Convert Colors</h1>
 
-      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
+      <section className="grid gap-5 items-start grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
         {convertLinks.map((link) => (
           <ColorLinkCard key={link.label} link={link} />
         ))}

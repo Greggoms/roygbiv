@@ -38,8 +38,8 @@ const RgbCard = ({ color, showFooter }: RgbCardProps) => {
     <Card>
       <div
         style={{ backgroundColor: conversions.adjustedRgb }}
-        className="p-0 min-h-32"
-      ></div>
+        className="p-0 h-36"
+      />
       <CardHeader>
         <CardTitle>{conversions.adjustedRgb}</CardTitle>
       </CardHeader>

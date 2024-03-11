@@ -5,13 +5,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useColorStore } from "@/store";
-import HexBadge from "@/components/convert/HexBadge";
-import HexCard from "../convert/HexCard";
+import RgbaCard from "../convert/RgbaCard";
+import RgbaBadge from "../convert/RgbaBadge";
 import getColorsByFormat from "@/lib/utils/get-colors-by-format";
-import getHexConversions from "@/lib/utils/get-hex-conversions";
+import getRgbaConversions from "@/lib/utils/get-rgba-conversions";
 import {
-  ConvertColorValues,
-  convertColorSchema,
+  ConvertRgbaValues,
+  convertRgbaSchema,
 } from "./schemas/convert-colors-form";
 
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -30,33 +31,33 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 
-const ConvertHexForm = () => {
+const ConvertRgbaForm = () => {
   const [submittedColor, setSubmittedColor] = useState("");
   const submittedColors = useColorStore((state) => state.submittedColors);
   const addAColor = useColorStore((state) => state.addAColor);
 
   const removeSomeColors = useColorStore((state) => state.removeSomeColors);
 
-  const colors = getColorsByFormat(submittedColors, "hex");
+  const colors = getColorsByFormat(submittedColors, "rgba");
   const colorMap = colors.split("__").filter((val) => !!val);
 
-  const form = useForm<ConvertColorValues>({
-    resolver: zodResolver(convertColorSchema),
-    defaultValues: { hex: "" },
+  const form = useForm<ConvertRgbaValues>({
+    resolver: zodResolver(convertRgbaSchema),
+    defaultValues: { rgba: "" },
   });
 
-  const onSubmit = (values: ConvertColorValues) => {
-    const { hex } = values;
+  const onSubmit = (values: ConvertRgbaValues) => {
+    const { rgba } = values;
     try {
-      const conversions = getHexConversions(hex);
+      const conversions = getRgbaConversions(rgba);
 
       if (conversions) {
         // update the value of useLocalStorage
-        addAColor(conversions.adjustedHex);
-        setSubmittedColor(conversions.adjustedHex);
+        addAColor(conversions.adjustedRgba);
+        setSubmittedColor(conversions.adjustedRgba);
       }
     } catch (error: any) {
-      form.setError("hex", { message: error.message, type: "validate" });
+      form.setError("rgba", { message: error.message, type: "validate" });
     }
   };
 
@@ -67,19 +68,22 @@ const ConvertHexForm = () => {
           <div className="flex flex-col gap-y-2">
             <FormField
               control={form.control}
-              name="hex"
+              name="rgba"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel>HEX Value</FormLabel>
+                  <FormLabel>RGBA Value</FormLabel>
                   <div className="flex items-center gap-x-2">
                     <FormControl>
                       <Input
-                        placeholder="eg: #0284c7 || 133337 || 007"
+                        placeholder="eg: rgba(155, 50, 50, 0.5) || 155 50 50 0.5"
                         {...field}
                       />
                     </FormControl>
                     <Button type="submit">Convert</Button>
                   </div>
+                  <FormDescription>
+                    r: 0-255, g: 0-255, b: 0-255, a:0-1
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -97,7 +101,7 @@ const ConvertHexForm = () => {
                     className="text-xs py-[2px] px-[4px] h-auto"
                     onClick={() => {
                       removeSomeColors(colorMap);
-                      form.setValue("hex", "");
+                      form.setValue("rgba", "");
                     }}
                   >
                     remove all
@@ -111,13 +115,13 @@ const ConvertHexForm = () => {
                       {/* Always visible badges */}
                       {colorMap.slice(0, 8).map((color) => (
                         <li key={color}>
-                          <HexBadge
+                          <RgbaBadge
                             color={color}
                             handleSubmit={() => {
-                              form.setValue("hex", color, {
+                              form.setValue("rgba", color, {
                                 shouldValidate: true,
                               });
-                              form.setFocus("hex");
+                              form.setFocus("rgba");
                             }}
                           />
                         </li>
@@ -142,13 +146,13 @@ const ConvertHexForm = () => {
                       {/* Always visible badges */}
                       {colorMap.slice(8).map((color) => (
                         <li key={color}>
-                          <HexBadge
+                          <RgbaBadge
                             color={color}
                             handleSubmit={() => {
-                              form.setValue("hex", color, {
+                              form.setValue("rgba", color, {
                                 shouldValidate: true,
                               });
-                              form.setFocus("hex");
+                              form.setFocus("rgba");
                             }}
                           />
                         </li>
@@ -162,9 +166,9 @@ const ConvertHexForm = () => {
         </form>
       </Form>
 
-      {submittedColor && <HexCard color={submittedColor} showFooter />}
+      {submittedColor && <RgbaCard color={submittedColor} showFooter />}
     </>
   );
 };
 
-export default ConvertHexForm;
+export default ConvertRgbaForm;

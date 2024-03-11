@@ -40,8 +40,8 @@ const HexCard = ({ color, showFooter }: HexCardProps) => {
     <Card>
       <div
         style={{ backgroundColor: conversions.adjustedHex }}
-        className="p-0 min-h-32"
-      ></div>
+        className="p-0 h-36"
+      />
       <CardHeader>
         <CardTitle>{conversions.adjustedHex}</CardTitle>
       </CardHeader>

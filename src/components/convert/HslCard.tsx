@@ -3,6 +3,7 @@ import getHslConversions from "@/lib/utils/get-hsl-conversions";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -16,7 +17,7 @@ const HslCard = ({ color, showFooter }: HslCardProps) => {
   if (!color.startsWith("hsl(")) {
     return (
       <div className="p-2">
-        <em className="text-destructive">{`"${color}" is an invalid CMYK value`}</em>
+        <em className="text-destructive">{`"${color}" is an invalid HSL value`}</em>
         <p className="text-sm text-muted-foreground">
           Did you mean to use the <code>{`<HslCard />`}</code> here?
         </p>
@@ -38,10 +39,13 @@ const HslCard = ({ color, showFooter }: HslCardProps) => {
     <Card>
       <div
         style={{ backgroundColor: conversions.adjustedHsl }}
-        className="p-0 min-h-32"
-      ></div>
+        className="p-0 h-36"
+      />
       <CardHeader>
         <CardTitle>{conversions.adjustedHsl}</CardTitle>
+        <CardDescription>
+          {`${conversions.adjustedHsl.replaceAll("%", "")}`}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         {conversions && (

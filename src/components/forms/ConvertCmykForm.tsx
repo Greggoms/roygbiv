@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -53,8 +54,8 @@ const ConvertCmykForm = () => {
       if (conversions) {
         // update the value of useLocalStorage
         addAColor(conversions.adjustedCmyk);
+        setSubmittedColor(conversions.adjustedCmyk);
       }
-      setSubmittedColor(cmyk);
     } catch (error: any) {
       form.setError("cmyk", { message: error.message, type: "validate" });
     }
@@ -70,16 +71,19 @@ const ConvertCmykForm = () => {
               name="cmyk"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel>Cmyk Value</FormLabel>
+                  <FormLabel>CMYK Value</FormLabel>
                   <div className="flex items-center gap-x-2">
                     <FormControl>
                       <Input
-                        placeholder="eg: cmyk(100%, 25%, 0%, 0%) || 100 25 0 0 || 100%, 25%, 0%, 0%"
+                        placeholder="eg: cmyk(100%, 25%, 0%, 0%) || 100 25 0 0"
                         {...field}
                       />
                     </FormControl>
                     <Button type="submit">Convert</Button>
                   </div>
+                  <FormDescription>
+                    c: 0-100, m: 0-100, y: 0-100, k: 0-100
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

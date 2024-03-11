@@ -7,6 +7,7 @@ import getCmykConversions, {
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -45,10 +46,13 @@ const CmykCard = ({ color, showFooter }: CmykCardProps) => {
     <Card>
       <div
         style={{ backgroundColor: `rgb(${toRgb.r},${toRgb.g},${toRgb.b})` }}
-        className="p-0 min-h-32"
-      ></div>
+        className="p-0 h-36"
+      />
       <CardHeader>
         <CardTitle>{conversions.adjustedCmyk}</CardTitle>
+        <CardDescription>
+          {`${conversions.adjustedCmyk.replaceAll("%", "")}`}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         {conversions && (
